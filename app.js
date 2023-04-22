@@ -30,6 +30,17 @@ app.put("/update/:_id", async (req, res) => {
   res.send("update successfully!");
 });
 
+app.get('/search/:key',async (req,res)=>{
+  let data = await Products.find({
+    "$or":[
+      {
+        "name":{$regex:req.params.key}
+      }
+    ]
+  })
+  res.send(data)
+});
+
 app.listen(8000, () => {
   console.log("running on port 8000");
 });
