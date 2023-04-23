@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require('multer')
+const os = require('os')
 
 require("./config");
 const Products = require("./products");
@@ -60,5 +61,5 @@ app.post("/uploadfile", upload ,async (req, res) => {
 });
 
 app.listen(8000, () => {
-  console.log("running on port 8000");
+  console.log("running on port 8000",os.userInfo());
 });
