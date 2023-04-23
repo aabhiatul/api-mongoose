@@ -1,8 +1,22 @@
 const express = require("express");
+const multer = require('multer')
+
 require("./config");
 const Products = require("./products");
 
+
 const app = express();
+
+const upload = multer({
+  storage:multer.diskStorage({
+    destination:function(req,file,cb){
+      cb(null,"uploads")
+    },
+    filename:function(req,file,cb){
+      cb(null,file.fieldname+"-"+Date.now()+".jpeg")
+    }
+  })
+}).single("user_file")
 
 app.use(express.json());
 
@@ -30,15 +44,19 @@ app.put("/update/:_id", async (req, res) => {
   res.send("update successfully!");
 });
 
-app.get('/search/:key',async (req,res)=>{
+app.get("/search/:key", async (req, res) => {
   let data = await Products.find({
-    "$or":[
+    $or: [
       {
-        "name":{$regex:req.params.key}
-      }
-    ]
-  })
-  res.send(data)
+        name: { $regex: req.params.key },
+      },
+    ],
+  });
+  res.send(data);
+});
+
+app.post("/uploadfile", upload ,async (req, res) => {
+  res.send("file uploaded successfully!");
 });
 
 app.listen(8000, () => {
